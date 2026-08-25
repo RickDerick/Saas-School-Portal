@@ -188,4 +188,40 @@ class CentralController extends Controller
             'domain' => $domain->domain,
         ], 201);
     }
+
+    public function update(Request $request, string $id)
+    {
+        $tenant = Tenant::findOrFail($id);
+
+        $request->validate([
+            'company_name' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'primary_color' => 'nullable|regex:/^#[0-9A-Fa-f]{6}$/',
+            'secondary_color' => 'nullable|regex:/^#[0-9A-Fa-f]{6}$/',
+            'accent_color' => 'nullable|regex:/^#[0-9A-Fa-f]{6}$/',
+            'logo' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+        ]);
+
+        $data = $request->only(['company_name', 'email', 'primary_color', 'secondary_color', 'accent_color']);
+
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('tenant-logos', 'public');
+            $data['logo_url'] = Storage::disk('public')->url($path);
+        }
+
+        $tenant->update($data);
+
+        return response()->json([
+            'message' => 'Tenant updated successfully',
+            'tenant' => $tenant,
+        ]);
+    }
+
+    public function destroy(string $id)
+    {
+        $tenant = Tenant::findOrFail($id);
+        $tenant->delete();
+
+        return response()->json(['message' => 'Tenant deleted successfully']);
+    }
 }

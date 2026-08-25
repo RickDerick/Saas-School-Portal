@@ -29,8 +29,14 @@ export const dashboardRoutes = [
         },
         {
             path: 'superadmin/tenants/:id',
-            name: 'SuperAdminTenantShow',
+            name: 'SuperAdminTenantDetails',
             component: () => import('@/modules/dashboard/components/superadmin/views/TenantDetail.vue'),
+            meta: { requiresRole: 'SuperAdmin' },
+        },
+        {
+            path: 'superadmin/tenants/:id/edit',
+            name: 'SuperAdminTenantEdit',
+            component: () => import('@/modules/dashboard/components/superadmin/views/EditTenant.vue'),
             meta: { requiresRole: 'SuperAdmin' },
         },
         {

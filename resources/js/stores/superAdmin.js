@@ -126,11 +126,47 @@ export const useSuperAdminAuthStore = defineStore('superAdminAuth', {
             return api.post(CentralUrls.tenants, payload)
                 .then(({ data }) => {
                     this.toast.success('School created successfully');
-                    this.router.push({ name: 'SuperAdminTenantShow', params: { id: data.tenant.id } });
+                    this.router.push({ name: 'SuperAdminTenantDetails', params: { id: data.tenant.id } });
                     return data;
                 })
                 .catch((error) => {
                     this.toast.error(error.response?.data?.message || 'Failed to create tenant');
+                    throw error;
+                });
+        },
+
+        async updateTenant(id, form) {
+            const payload = new FormData();
+            payload.append('_method', 'PUT');
+            payload.append('company_name', form.companyName);
+            payload.append('email', form.email);
+            if (form.primaryColor) payload.append('primary_color', form.primaryColor);
+            if (form.secondaryColor) payload.append('secondary_color', form.secondaryColor);
+            if (form.accentColor) payload.append('accent_color', form.accentColor);
+
+            const logoFile = Array.isArray(form.logo) ? form.logo[0] : form.logo;
+            if (logoFile) payload.append('logo', logoFile);
+
+            return api.post(`${CentralUrls.tenants}/${id}`, payload)
+                .then(({ data }) => {
+                    this.toast.success(data.message || 'School updated successfully');
+                    this.router.push({ name: 'SuperAdminTenantDetails', params: { id } });
+                    return data;
+                })
+                .catch((error) => {
+                    this.toast.error(error.response?.data?.message || 'Failed to update tenant');
+                    throw error;
+                });
+        },
+
+        async deleteTenant(id) {
+            return api.delete(`${CentralUrls.tenants}/${id}`)
+                .then(({ data }) => {
+                    this.toast.success(data.message || 'School deleted successfully');
+                    return data;
+                })
+                .catch((error) => {
+                    this.toast.error(error.response?.data?.message || 'Failed to delete tenant');
                     throw error;
                 });
         }

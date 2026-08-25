@@ -30,4 +30,6 @@ Route::middleware(['auth:sanctum', 'permission:manage-tenants,sanctum'])->group(
     Route::get('/tenants', [CentralController::class, 'index']);
     Route::get('/tenants/{id}', [CentralController::class, 'show']);
     Route::post('/tenants', [CentralController::class, 'store']);
+    Route::put('/tenants/{id}', [CentralController::class, 'update']);
+    Route::delete('/tenants/{id}', [CentralController::class, 'destroy']);
 });
