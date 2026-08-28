@@ -42,6 +42,11 @@
                         prepend-icon="mdi-cog-outline"
                         :to="{ name: 'settings' }"
                     />
+                    <v-list-item
+                        title="Logout"
+                        prepend-icon="mdi-logout"
+                        @click="logout"
+                    />
                 </v-list>
             </v-card>
         </v-menu>
@@ -57,6 +62,14 @@ const superAdminAuthStore = useSuperAdminAuthStore();
 const tenantAuthStore = useTenantAuthStore();
 
 const currentUser = computed(() => superAdminAuthStore.user || tenantAuthStore.user);
+
+function logout() {
+    if (superAdminAuthStore.isAuthenticated) {
+        superAdminAuthStore.logout();
+    } else {
+        tenantAuthStore.logout();
+    }
+}
 
 const initials = computed(() => {
     const name = currentUser.value?.name;

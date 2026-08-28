@@ -3,6 +3,7 @@ import { authRoutes } from '../modules/auth/routes';
 import { isCentralDomain } from '../stores/constants';
 import { useSuperAdminAuthStore } from '../stores/superAdmin';
 import { useTenantAuthStore } from '../stores/tenantAuth';
+import { useNavigationProgressStore } from '../stores/navigationProgress';
 import { dashboardRoutes } from '../modules/dashboard/dashboardRoutes';
 import FallBackPage from '@/components/FallBackPage.vue';
 
@@ -29,6 +30,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
+    useNavigationProgressStore().start();
+
     if (to.meta.requiresRole) {
         const authStore = useSuperAdminAuthStore();
         if (!authStore.isAuthenticated || !authStore.hasRole(to.meta.requiresRole)) {
@@ -50,6 +53,14 @@ router.beforeEach((to) => {
             return isCentralDomain() ? { path: '/auth/login' } : { path: '/login' };
         }
     }
+});
+
+router.afterEach(() => {
+    useNavigationProgressStore().stop();
+});
+
+router.onError(() => {
+    useNavigationProgressStore().stop();
 });
 
 export default router
