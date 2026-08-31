@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 import { authRoutes } from '../modules/auth/routes';
 import { isCentralDomain } from '../stores/constants';
 import { useSuperAdminAuthStore } from '../stores/superAdmin';
-import { useTenantAuthStore } from '../stores/tenantAuth';
+import { useTenantStore } from '../stores/tenant';
 import { useNavigationProgressStore } from '../stores/navigationProgress';
 import { dashboardRoutes } from '../modules/dashboard/dashboardRoutes';
 import FallBackPage from '@/components/FallBackPage.vue';
@@ -40,7 +40,7 @@ router.beforeEach((to) => {
     }
 
     if (to.meta.requiresTenantAuth) {
-        const tenantAuthStore = useTenantAuthStore();
+        const tenantAuthStore = useTenantStore();
         if (!tenantAuthStore.isAuthenticated) {
             return { path: '/login' };
         }
@@ -48,7 +48,7 @@ router.beforeEach((to) => {
 
     if (to.meta.requiresAnyAuth) {
         const authStore = useSuperAdminAuthStore();
-        const tenantAuthStore = useTenantAuthStore();
+        const tenantAuthStore = useTenantStore();
         if (!authStore.isAuthenticated && !tenantAuthStore.isAuthenticated) {
             return isCentralDomain() ? { path: '/auth/login' } : { path: '/login' };
         }

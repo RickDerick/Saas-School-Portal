@@ -1,31 +1,64 @@
 <template>
   <v-main>
-    <v-container class="py-16" style="max-width: 400px;">
-      <h1 class="text-h5 font-weight-medium mb-6 text-center">Sign in</h1>
+    <v-row no-gutters style="min-height: 100vh;">
+      <v-col cols="12" md="6" class="pa-0">
+        <AuthLottiePanel />
+      </v-col>
 
-      <v-form @submit.prevent="submit">
-        <v-text-field v-model="formData.email" label="Email" type="email" class="mb-2" required  variant="outlined"/>
-        <v-text-field v-model="formData.password" label="Password" type="password" required variant="outlined"/>
+      <v-col cols="12" md="6" class="d-flex align-center justify-center">
+        <v-container class="py-16" style="max-width: 400px;">
+          <v-card class="pa-6" elevation="2">
+            <div class="text-center mb-6">
+              <img
+                v-if="branding.logoUrl"
+                :src="branding.logoUrl"
+                :alt="branding.companyName || 'School logo'"
+                class="mb-4"
+                style="max-height: 72px; max-width: 100%;"
+              />
+              <h1 class="text-h5 font-weight-medium">
+                {{ branding.companyName ? `Sign in to ${branding.companyName}` : 'Sign in' }}
+              </h1>
+            </div>
 
-        <v-btn type="submit" color="primary" size="large" block class="mt-4" :loading="submitting">
-          Sign in
-        </v-btn>
-      </v-form>
-    </v-container>
+            <v-form @submit.prevent="submit">
+              <v-text-field v-model="formData.email" label="Email" type="email" class="mb-2" required  variant="outlined"/>
+              <v-text-field
+                v-model="formData.password"
+                label="Password"
+                :type="showPassword ? 'text' : 'password'"
+                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="showPassword = !showPassword"
+                required
+                variant="outlined"
+              />
+
+              <v-btn type="submit" color="primary" size="large" block class="mt-4" :loading="submitting">
+                Sign in
+              </v-btn>
+            </v-form>
+          </v-card>
+        </v-container>
+      </v-col>
+    </v-row>
   </v-main>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { useTenantAuthStore } from '@/stores/tenantAuth';
+import { useTenantStore } from '@/stores/tenant';
+import { useTenantBrandingStore } from '@/stores/tenantBranding';
+import AuthLottiePanel from '@/modules/auth/components/AuthLottiePanel.vue';
 
-const auth = useTenantAuthStore();
+const auth = useTenantStore();
+const branding = useTenantBrandingStore();
 
 const formData = ref({
   email: '',
   password: '',
 });
 const submitting = ref(false);
+const showPassword = ref(false);
 
 async function submit() {
   submitting.value = true;

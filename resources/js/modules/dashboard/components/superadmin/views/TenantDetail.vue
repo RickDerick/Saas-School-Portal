@@ -52,15 +52,16 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import api from '@/services/superAdminApi';
-import { CentralUrls } from '@/stores/constants';
+import { useTenantStore } from '@/stores/tenant';
 
+const tenantStore = useTenantStore();
 const route = useRoute();
-const tenant = ref(null);
-const loading = ref(true);
-const error = ref('');
+const tenant = computed(() => tenantStore.tenantDetails);
+const loading = computed(() => tenantStore.loading);
+const error = computed(() => tenantStore.error);
+const routeParams = computed(() => route.params);
 
 function formatDate(value) {
   return value ? new Date(value).toLocaleDateString() : '';
@@ -74,13 +75,6 @@ const loginUrl = computed(() => {
 });
 
 onMounted(async () => {
-  try {
-    const { data } = await api.get(`${CentralUrls.tenants}/${route.params.id}`);
-    tenant.value = data.tenant;
-  } catch (e) {
-    error.value = e.response?.data?.message || 'Could not load this school.';
-  } finally {
-    loading.value = false;
-  }
+  return await tenantStore.getTenantDetails(routeParams.value.id);
 });
 </script>

@@ -9,12 +9,12 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useTenantAuthStore } from '@/stores/tenantAuth';
+import { useTenantStore } from '@/stores/tenant';
 import TenantAdminDashboard from '@/modules/dashboard/views/TenantAdminDashboard.vue';
 import TenantTeachersDashboard from '@/modules/dashboard/views/TenantTeachersDashboard.vue';
 import TenantAccountantDashboard from '@/modules/dashboard/views/TenantAccountantDashboard.vue';
 
-const tenantAuthStore = useTenantAuthStore();
+const tenantAuthStore = useTenantStore();
 
 // Same role -> component idea as layouts/navRegistry.js, just for the
 // dashboard body instead of the sidebar.

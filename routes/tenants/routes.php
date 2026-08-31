@@ -21,22 +21,14 @@ use App\Http\Controllers\Tenant\BrandingController;
 |
 */
 
-Route::middleware([
-    'web',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-])->group(function () {
-    Route::get('/{any?}', function () {
-        return view('app');
-    })->where('any', '.*');
-});
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Tenant API Routes
 |--------------------------------------------------------------------------
+|
+| Registered before the web catch-all below — that catch-all matches
+| any GET path (including api/v1/*), so if it came first it would
+| swallow these requests and return the SPA shell instead of JSON.
 */
 
 Route::prefix('api/v1')
@@ -67,6 +59,18 @@ Route::prefix('api/v1')
     });
 
     });
+
+
+
+Route::middleware([
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+])->group(function () {
+    Route::get('/{any?}', function () {
+        return view('app');
+    })->where('any', '.*');
+});
 
 
 

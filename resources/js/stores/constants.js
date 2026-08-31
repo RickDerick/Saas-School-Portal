@@ -13,6 +13,7 @@ export const CentralUrls = {
     tenants: 'central/tenants',
     profileEmail: 'central/profile/email',
     profilePassword: 'central/profile/password',
+    tenantDetails: (tenantId) => `central/tenants/${tenantId}`,
 }
 
 export const TenantUrls = {

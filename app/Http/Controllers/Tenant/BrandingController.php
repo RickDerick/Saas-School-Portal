@@ -10,6 +10,7 @@ class BrandingController extends Controller
     public function show(){
         return response()->json([
             'branding' => [
+                'company_name' => tenant('company_name') ?? null,
                 'primary_color' => tenant('primary_color') ?? '#FFFFFF',
                 'secondary_color' => tenant('secondary_color') ?? '#C53777',
                 'accent_color' => tenant('accent_color') ?? '#FE5940',

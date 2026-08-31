@@ -56,10 +56,10 @@
 <script setup>
 import { computed } from 'vue';
 import { useSuperAdminAuthStore } from '@/stores/superAdmin';
-import { useTenantAuthStore } from '@/stores/tenantAuth';
+import { useTenantStore } from '@/stores/tenant';
 
 const superAdminAuthStore = useSuperAdminAuthStore();
-const tenantAuthStore = useTenantAuthStore();
+const tenantAuthStore = useTenantStore();
 
 const currentUser = computed(() => superAdminAuthStore.user || tenantAuthStore.user);
 

@@ -1,13 +1,17 @@
 import { defineStore } from 'pinia';
-import { TenantUrls } from '@/stores/constants';
+import { CentralUrls, TenantUrls } from '@/stores/constants';
 import api from '@/services/tenantApi';
+import superAdminApi from '@/services/superAdminApi';
 
-export const useTenantAuthStore = defineStore('tenantAuth', {
+export const useTenantStore = defineStore('tenant', {
     state: () => ({
         token: localStorage.getItem('tenant_token') || null,
         user: JSON.parse(localStorage.getItem('tenant_user') || 'null'),
         roles: JSON.parse(localStorage.getItem('tenant_roles') || '[]'),
         permissions: JSON.parse(localStorage.getItem('tenant_permissions') || '[]'),
+        tenantDetails: null,
+        loading:false,
+        error: null,
     }),
 
     getters: {
@@ -81,6 +85,21 @@ export const useTenantAuthStore = defineStore('tenantAuth', {
                     this.toast.error(error.response?.data?.message || 'Failed to update password');
                     throw error;
                 });
+        },
+
+        async getTenantDetails(tenantId) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const { data } = await superAdminApi.get(CentralUrls.tenantDetails(tenantId));
+                this.tenantDetails = data.tenant;
+                return data.tenant;
+            } catch (error) {
+                this.error = error.response?.data?.message || 'Could not load tenant details.';
+                throw error;
+            } finally {
+                this.loading = false;
+            }
         },
     },
 });

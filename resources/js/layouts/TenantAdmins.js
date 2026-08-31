@@ -1,7 +1,7 @@
-import { useTenantAuthStore } from '@/stores/tenantAuth';
+import { useTenantStore } from '@/stores/tenant';
 
 export default function TenantAdmins() {
-    const tenantAuthStore = useTenantAuthStore();
+    const tenantAuthStore = useTenantStore();
 
     return [
         {

@@ -20,11 +20,11 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useSuperAdminAuthStore } from '@/stores/superAdmin';
-import { useTenantAuthStore } from '@/stores/tenantAuth';
+import { useTenantStore } from '@/stores/tenant';
 import { navRegistry } from '@/layouts/navRegistry';
 
 const superAdminAuthStore = useSuperAdminAuthStore();
-const tenantAuthStore = useTenantAuthStore();
+const tenantAuthStore = useTenantStore();
 const drawer = ref(true);
 
 // Only one of these is ever populated in a real session — central domain

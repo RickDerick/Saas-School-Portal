@@ -109,10 +109,10 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
 import { useSuperAdminAuthStore } from '@/stores/superAdmin';
-import { useTenantAuthStore } from '@/stores/tenantAuth';
+import { useTenantStore } from '@/stores/tenant';
 
 const superAdminAuthStore = useSuperAdminAuthStore();
-const tenantAuthStore = useTenantAuthStore();
+const tenantAuthStore = useTenantStore();
 
 // The settings page is shared by both audiences — whichever store is
 // currently authenticated owns the profile being edited.
